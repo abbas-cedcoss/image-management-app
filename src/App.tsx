@@ -4,21 +4,18 @@ import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="h-full border-2 border-gray-200
+                border-opacity-60 rounded-lg
+                overflow-hidden">
+
+      <div className="p-6 hover:bg-green-600
+                    hover:text-white transition
+                    duration-300 ease-in">
+
+        <h1 className="text-2xl font-semibold mb-3">
+          Hover
+        </h1>
+      </div>
     </div>
   );
 }
