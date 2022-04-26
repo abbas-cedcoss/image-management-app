@@ -1,3 +1,5 @@
-export const initialStates ={
-    imageText:'',
+export const initialStates = {
+    imageText: '',
+    selectedImage: [],
+    imageArray: []
 }
