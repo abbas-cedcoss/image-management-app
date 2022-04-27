@@ -66,7 +66,8 @@ function Landing() {
                                 value={componentState['imageText']}
                                 onChange={(event) => {
                                     updateState('imageText', event.target.value);
-                                    let tempState = reduxState.filter((element: { [x: string]: string | string[]; }) => element['alt_description'].includes(componentState['imageText']));
+                                    console.log(reduxState, event.target.value)
+                                    let tempState = reduxState.filter((element: { [x: string]: string | string[]; }) => element['alt_description'] != null && element['alt_description'].includes(componentState['imageText']));
                                     updateState('imageArray', tempState);
                                 }}
                             />
