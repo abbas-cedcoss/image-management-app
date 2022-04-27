@@ -1,0 +1,10 @@
+.container{
+    background-color: antiquewhite;
+    padding: 1%;
+    border-radius: 12px;
+    box-shadow: 0 0 30px black;
+}
+
+.main{
+    background-color: #fff8f0;
+}

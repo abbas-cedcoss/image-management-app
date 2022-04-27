@@ -5,9 +5,11 @@ import { bindActionCreators } from 'redux';
 import { useSelector } from 'react-redux';
 import getimage from './Apihelper';
 import { initialStates } from '../Core/Helper/helper';
+import Actions from './Actions';
+import { connect } from 'react-redux';
 
-function Landing() {
-    const dispatch = useDispatch();
+function Landing(props: any) {
+    const dispatch = useDispatch<any>();
     const { addImage, deleteImage } = bindActionCreators(actionCreators, dispatch);
     const reduxState = useSelector((reduxState: State) => reduxState.imagereducer);
     const [componentState, setComponentState] = useState<any>(initialStates);
@@ -27,6 +29,16 @@ function Landing() {
         componentState['imageArray'] = modifiedData;
         updateState('imageArray', modifiedData);
     }
+
+    function renderParent(shouldRender: any) {
+        console.log(shouldRender)
+        updateState('renderParent', shouldRender);
+    }
+
+    useEffect(() => {
+        let temp: any = [...reduxState];
+        updateState('imageArray', temp);
+    }, [componentState['renderParent']]);
 
     useEffect(() => {
         getImage();
@@ -49,9 +61,9 @@ function Landing() {
     }
 
     return (
-        <>
-            <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-md w-full space-y-8">
+        < >
+            <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 main ">
+                <div className="max-w-md w-full space-y-8 container">
                     <div>
                         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Image Management App</h2>
                     </div>
@@ -60,48 +72,27 @@ function Landing() {
                             <input
                                 name="search"
                                 autoComplete="current-password"
-                                required
                                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                 placeholder="Search image"
                                 value={componentState['imageText']}
                                 onChange={(event) => {
                                     updateState('imageText', event.target.value);
-                                    console.log(reduxState, event.target.value)
                                     let tempState = reduxState.filter((element: { [x: string]: string | string[]; }) => element['alt_description'] != null && element['alt_description'].includes(componentState['imageText']));
                                     updateState('imageArray', tempState);
                                 }}
+
                             />
                         </div>
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-start mb-6">
-                                <div className="flex items-center h-5">
-                                    <button type="button" className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" onClick={() => {
-                                        let temp = { ...reduxState };
-                                        Object.keys(temp).map(index => {
-                                            temp[index]['isSelected'] = !temp[index]['isSelected'];
-                                        });
-                                        updateState('imageArray', temp);
-                                    }}>Select All</button>
-                                </div>
-                            </div>
-
-                            <div className="flex items-start mb-6">
-                                <button type="button" className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onClick={() => {
-                                    let tempImages = reduxState.filter((element: any, index: any) => {
-                                        // console.log(componentState['selectedImage'][index] , reduxState[index]['id'])
-                                        if (componentState['selectedImage']?.[index]?.['id'] !== undefined) {
-                                            console.log('reduxState[index]', reduxState[index], "componentState['selectedImage'][index]", componentState['selectedImage'][index])
-                                            // console.log(componentState['selectedImage'][index]['id'] , reduxState[index]['id'])
-                                            if (componentState['selectedImage'][index]['id'] !== reduxState[index]['id']) {
-                                                // console.log(element)
-                                                return element;
-                                            }
-                                        }
-                                    });
-                                    // console.log(tempImages)
-                                }}>Delete</button>
-                            </div>
-                        </div>
+                        {componentState['imageText'] !== '' && <span>
+                            <p className="text-xs"><b>{componentState['imageArray'].length} result(s) found!</b></p>
+                        </span>}
+                        <Actions
+                            updateState={updateState}
+                            imagereducer={[]}
+                            componentState={componentState}
+                            renderParent={componentState['renderParent']}
+                            renderParentFn={renderParent}
+                        />
                         <div className="grid grid-cols-3 gap-1 justify-center">
                             {
                                 Object.keys(componentState['imageArray']).map((image, index) => {
@@ -127,4 +118,8 @@ function Landing() {
     )
 }
 
-export default Landing
+function mapStateToProps(mapStateToProps: any) {
+    return mapStateToProps;
+}
+
+export default connect(mapStateToProps)(Landing)
